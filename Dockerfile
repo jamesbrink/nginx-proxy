@@ -23,6 +23,15 @@ RUN wget https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VER
  && tar -C /usr/local/bin -xvzf docker-gen-linux-amd64-$DOCKER_GEN_VERSION.tar.gz \
  && rm /docker-gen-linux-amd64-$DOCKER_GEN_VERSION.tar.gz
 
+# Install and configure new-relic-agent monitoring
+RUN apt-get update \
+  && apt-get install -y python python-daemon python-setproctitle  \
+  && wget http://nginx.org/packages/mainline/debian/pool/nginx/n/nginx-nr-agent/nginx-nr-agent_2.0.0-6_all.deb \
+  && dpkg --install nginx-nr-agent_2.0.0-6_all.deb \
+  && rm nginx-nr-agent_2.0.0-6_all.deb \
+  && apt-get clean \
+  && rm -r /var/lib/apt/lists/*
+
 COPY . /app/
 WORKDIR /app/
 
